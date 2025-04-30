@@ -1,0 +1,41 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report,accuracy_score,confusion_matrix
+
+df=pd.read_csv("C:\\Users\\user\\Desktop\\creditcard.csv")
+print(df)
+print(df.head())
+print(df.tail())
+print(df.shape)
+print(df.columns)
+print(df.isnull().sum())
+print(df.describe())
+print(df.corr())
+
+plt.figure(figsize=(10, 8))
+sns.heatmap(df.corr(), cmap='coolwarm')
+plt.title("Credit Card Data")
+plt.show()
+
+X = df.drop(columns=["Class"])
+y = df["Class"]
+
+x_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=35)
+
+print(x_train.shape)
+print(y_train.shape)
+print(X_test.shape)
+print(y_test.shape)
+
+model=LogisticRegression()
+model.fit(x_train,y_train)
+y_pred=model.predict(X_test)
+accuracy=accuracy_score(y_test,y_pred)
+print("Accuracy:{:.2f}%".format(accuracy * 100))
+print("confusion matrix:\n",confusion_matrix(y_test,y_pred))
+print("\nclassification report:\n", classification_report(y_test,y_pred))
