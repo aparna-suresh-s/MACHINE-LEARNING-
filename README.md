@@ -1,67 +1,27 @@
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import confusion_matrix
-from matplotlib.colors import ListedColormap
+AIR QUALITY PREDICTION
 
-df = pd.read_csv("C:\\Users\\user\\Downloads\\WA_Fn-UseC_-Telco-Customer-Churn.csv")
-x = df[['Partner', 'Dependents']].values
-y = df.iloc[:, 4].values
+This project uses a simple linear regression model to predict PM2.5 levels based on the concentration of Ozone (O3), Nitrogen Dioxide (NO2), and Sulfur Dioxide (SO2).
 
-le_x = LabelEncoder()
-x_encoded = np.copy(x)
-x_encoded[:, 0] = le_x.fit_transform(x_encoded[:, 0])
-x_encoded[:, 1] = le_x.fit_transform(x_encoded[:, 1])
+1. Features
 
+●Data Loading: Loads air quality data from a CSV file using pandas.
 
-le_y = LabelEncoder()
-y_encoded = le_y.fit_transform(y)
+●Data Preprocessing: Handles missing values by dropping rows.
 
-x_train, x_test, y_train, y_test = train_test_split(x_encoded, y_encoded, test_size=0.2, random_state=0)
-st_x = StandardScaler()
-x_train = st_x.fit_transform(x_train)
-x_test = st_x.transform(x_test)
+●Feature Selection: Selects 'O3', 'NO2', and 'SO2' as features.
 
-classifier = LogisticRegression(random_state=0)
-classifier.fit(x_train, y_train)
+●Model Training: Trains a linear regression model using scikit-learn.
 
-y_pred = classifier.predict(x_test)
-cm = confusion_matrix(y_test, y_pred)
-print(cm)
+●Model Evaluation: Evaluates the model using Mean Squared Error (MSE).
 
-x_set, y_set = x_train, y_train
-x1, x2 = np.meshgrid(np.arange(start=x_set[:, 0].min() - 1, stop=x_set[:, 0].max() + 1, step=0.01),
-                     np.arange(start=x_set[:, 1].min() - 1, stop=x_set[:, 1].max() + 1, step=0.01))
-plt.contourf(x1, x2, classifier.predict(np.array([x1.ravel(), x2.ravel()]).T).reshape(x1.shape),
-             alpha=0.75, cmap=ListedColormap(('purple', 'yellow')))
-plt.xlim(x1.min(), x1.max())
-plt.ylim(x2.min(), x2.max())
-for i, j in enumerate(np.unique(y_set)):
-    plt.scatter(x_set[y_set == j, 0], x_set[y_set == j, 1],
-                color=ListedColormap(('purple', 'yellow'))(i), label=le_y.inverse_transform([j])[0])
-plt.title('Telecommunications (Train Set)')
-plt.xlabel('Partner (Encoded)')
-plt.ylabel('Dependents (Encoded)')
-plt.legend()
-plt.show()
+●Visualization: Visualizes actual vs. predicted PM2.5 values using matplotlib.
 
+●Future Prediction: Predicts PM2.5 levels for new data.
 
-x_set, y_set = x_test, y_test
-x1, x2 = np.meshgrid(np.arange(start=x_set[:, 0].min() - 1, stop=x_set[:, 0].max() + 1, step=0.01),
-                     np.arange(start=x_set[:, 1].min() - 1, stop=x_set[:, 1].max() + 1, step=0.01))
-plt.contourf(x1, x2, classifier.predict(np.array([x1.ravel(), x2.ravel()]).T).reshape(x1.shape),
-             alpha=0.75, cmap=ListedColormap(('purple', 'yellow')))
-plt.xlim(x1.min(), x1.max())
-plt.ylim(x2.min(), x2.max())
-for i, j in enumerate(np.unique(y_set)):
-    plt.scatter(x_set[y_set == j, 0], x_set[y_set == j, 1],
-                color=ListedColormap(('purple', 'yellow'))(i), label=le_y.inverse_transform([j])[0])
-plt.title('Telecommunications (Test Set)')
-plt.xlabel('Partner')
-plt.ylabel('Dependents')
-plt.legend()
-plt.show()
+2.Dependencies
 
+  ●pandas
+
+  ●scikit-learn
+
+  ●matplotlib
